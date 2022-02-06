@@ -34,7 +34,6 @@
         - android-studio
         - docker
         - google-chrome
-        - google-drive
         - google-cloud-sdk
         - iterm2
         - ngrok
@@ -42,6 +41,9 @@
         - sublime-text
         - visual-studio-code
         - vlc
+        - discord
+        - whatsapp
+        - postico
 
     - name: "Install homebrew packages"
       community.general.homebrew:
@@ -80,24 +82,23 @@
             "yarn",
             "zlib",
             "zsh",
+            "gh",
             "magic-wormhole",
           ]
         state: present
         update_homebrew: yes
 
-    - name: Setup dnsmasq
-      include_role:
-        name: dnsmasq
-
-    - name: "Install from Mac app store"
-      shell: mas install {{ item }}
-      with_items:
-        - 497799835 # xcode
-
     - name: Get the path to ZSH
       become: false
       local_action: command which zsh
       register: zsh_path
+
+    - name: Setup default iterm profile
+      copy:
+        src: templates/com.googlecode.iterm2.plist
+        dest: "/Users/{{ lookup('env', 'USER') }}/Library/Preferences/com.googlecode.iterm2.plist"
+        owner: "{{ lookup('env', 'USER') }}"
+        force: true
 
     - name: "Ensure homebrew zsh is in allowed shells"
       lineinfile:
@@ -121,6 +122,11 @@
         owner: "{{ lookup('env', 'USER') }}"
         force: yes
 
+    - name: Clone zsh-autosuggestions from github
+      git:
+        repo: https://github.com/zsh-users/zsh-autosuggestions
+        dest: "/Users/{{ lookup('env', 'USER') }}/.oh-my-zsh/custom/plugins/zsh-autosuggestions"
+
     - name: Create a default VSCode configuration
       template:
         src: templates/vscode-settings.json.j2
@@ -139,6 +145,8 @@
       shell: code --install-extension {{ item }}
       with_items:
         - ms-vscode-remote.vscode-remote-extensionpack
+        - ms-vscode.sublime-keybindings
+        - eamodio.gitlens
 
     - name: Clone ASDF from github
       git:
