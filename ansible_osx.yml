@@ -44,6 +44,8 @@
         - discord
         - whatsapp
         - postico
+        - microsoft-teams
+        - flameshot
 
     - name: "Install homebrew packages"
       community.general.homebrew:
@@ -84,6 +86,9 @@
             "zsh",
             "gh",
             "magic-wormhole",
+            "wget",
+            "grep",
+            "sl",
           ]
         state: present
         update_homebrew: yes
@@ -119,6 +124,13 @@
       template:
         src: templates/.zshrc.j2
         dest: /Users/{{ lookup('env', 'USER') }}/.zshrc
+        owner: "{{ lookup('env', 'USER') }}"
+        force: yes
+
+    - name: "Create user ZSH configuration"
+      template:
+        src: templates/.zshrc.personal.after.j2
+        dest: /Users/{{ lookup('env', 'USER') }}/.zshrc.personal.after
         owner: "{{ lookup('env', 'USER') }}"
         force: yes
 
@@ -199,6 +211,7 @@
       shell: yarn global add {{ item }}
       with_items:
         - create-react-app
+        - aws-azure-login
 
     - name: re-generate bins now we've installed some yarn packages
       shell: asdf reshim nodejs

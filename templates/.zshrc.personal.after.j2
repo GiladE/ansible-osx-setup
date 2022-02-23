@@ -1,0 +1,13 @@
+alias terraform_install="$HOME/.terraform/scripts/install.sh"
+alias terraform_uninstall="$HOME/.terraform/scripts/uninstall.sh"
+alias terraform_list_versions="$HOME/.terraform/scripts/list_versions.sh"
+
+alias tf="terraform"
+alias gs="gss"
+
+alias aws_whoami="aws configure list && aws iam list-account-aliases --query \"AccountAliases\" --output text && aws sts get-caller-identity --query \"[Account,Arn,UserId]\" --output text"
+alias json='python3 -m json.tool'
+alias copy="pbcopy"
+
+alias sb-nonprod="export AWS_PROFILE=sb-nonprod && aws-azure-login -p sb-nonprod"
+alias sb-prod="export AWS_PROFILE=sb-prod && aws-azure-login -p sb-prod"
